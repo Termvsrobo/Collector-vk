@@ -88,8 +88,3 @@ if authorized:
             continue
 
     print(list_numbers)
-
-
-#conn.commit()
-
-#conn.close()
