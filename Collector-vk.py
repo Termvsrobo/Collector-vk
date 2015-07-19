@@ -16,7 +16,7 @@ except:
     print('Not authorized')
     
 #Подключаемся к базе данных SQLite3
-#conn = sqlite3.connect('/home/terminator/Peoples.sqlite')
+#conn = sqlite3.connect(settings.db)
 #database = conn.cursor()
 
 
