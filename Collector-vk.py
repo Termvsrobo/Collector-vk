@@ -1,20 +1,24 @@
 # -*- coding: utf-8 -*-
+"""
+Документация к модулю
+"""
 __author__ = 'Termvsrobo'
 
-import vk_api, sqlite3
-#В модуле settings просто указываем свои логин и пароль в переменных
+#import sqlite3
+import vk_api
+
 import settings
 
 #Авторизация
-login,password = settings.login,settings.password
-vk = vk_api.VkApi(login,password)
+login, password = settings.login, settings.password
+vk = vk_api.VkApi(login, password)
 try:
     vk.authorization()
     authorized = True
 except:
     authorized = False
-    print('Not authorized')
-    
+    print 'Not authorized'
+
 #Подключаемся к базе данных SQLite3
 #conn = sqlite3.connect(settings.db)
 #database = conn.cursor()
@@ -22,25 +26,40 @@ except:
 
 #Из строки выбираем только цифры. Функция возвращает номер телефона друга
 def process_number(number):
-    s = ''
+    """
+    Документация к функции
+    """
+    num_string = ''
     if number.isdigit():
         return number
     else:
         for k in number:
             if k.isdigit():
-                s += k
-        return s
+                num_string += k
+        return num_string
 
 #Список номеров
 list_numbers = []
 
 if authorized:
     #Получаем список друзей
-    friends = vk.method('friends.get',{'user_ids':None})['items']
+    friends = vk.method('friends.get', {'user_ids': None})['items']
     for friend in friends:
         try:
             #Получаем информацию о человеке
-            user_info = vk.method('users.get',{'user_ids':friend,'fields':'sex, bdate, city, country, online_mobile, domain, has_mobile, contacts, connections, site, education, universities, schools, common_count, relation, relatives, counters, screen_name, maiden_name, timezone, occupation,activities, interests, music, movies, tv, books, games, about, quotes, personal'})
+            user_info = vk.method('users.get', {'user_ids': friend,
+                                                'fields': 'sex, bdate, city, \
+                                                country, online_mobile, \
+                                                domain, has_mobile, contacts, \
+                                                connections, site, education, \
+                                                universities, schools, \
+                                                common_count, relation, \
+                                                relatives, counters, \
+                                                screen_name, maiden_name, \
+                                                timezone, occupation, \
+                                                activities, interests, music, \
+                                                movies, tv, books, games, \
+                                                about, quotes, personal'})
             domain = user_info[0]['domain']
             last_name = user_info[0]['last_name']
             university_name = user_info[0]['university_name']
@@ -76,15 +95,34 @@ if authorized:
             about = user_info[0]['about']
             personal = user_info[0]['personal']
             #Получаем список сообществ человека
-            groups = vk.method('groups.get',{'user_ids':friend,'fields':'city, country, place, description, wiki_page, members_count, counters, start_date, finish_date, activity, status, contacts, links, fixed_post, verified, site'})
-            
+            groups = vk.method('groups.get', {'user_ids': friend,
+                                              'fields': 'city, country, place,\
+                                              description, wiki_page, \
+                                              members_count, counters, \
+                                              start_date, finish_date, \
+                                              activity, status, contacts, \
+                                              links, fixed_post, verified, \
+                                              site'})
+
             for group in groups:
-                group_info = vk.method('groups.getById',{'group_id':group,'fields':'city, country, place, description, wiki_page, members_count, counters, start_date, finish_date, activity, status, contacts, links, fixed_post, verified, site'})
-            
+                group_info = vk.method('groups.getById', {'group_id': group,
+                                                          'fields': 'city, \
+                                                          country, place, \
+                                                          description, \
+                                                          wiki_page, \
+                                                          members_count, \
+                                                          counters, \
+                                                          start_date, \
+                                                          finish_date, \
+                                                          activity, status, \
+                                                          contacts, links, \
+                                                          fixed_post, \
+                                                          verified, site'})
+
             mobile = process_number(user_info[0]['mobile_phone'])
-            if len(mobile)>0:
+            if len(mobile) > 0:
                 list_numbers.append(mobile)
         except:
             continue
 
-    print(list_numbers)
+    print list_numbers
