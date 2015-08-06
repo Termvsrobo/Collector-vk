@@ -4,6 +4,8 @@
 """
 __author__ = 'Termvsrobo'
 
+# TODO Обработать все исключения от модуля vk_api
+
 #import sqlite3
 import vk_api
 
